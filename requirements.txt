@@ -10,3 +10,4 @@ gym
 PIL
 skimage
 stable-baselines3
+torchvision
