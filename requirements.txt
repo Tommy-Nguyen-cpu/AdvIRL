@@ -7,7 +7,10 @@ pyquaternion
 scipy
 tqdm
 gym
-PIL
-skimage
+pillow
+scikit-image
 stable-baselines3
+--find-links https://download.pytorch.org/whl/torch_stable.html
 torchvision
+git+https://github.com/openai/CLIP.git
+requests
