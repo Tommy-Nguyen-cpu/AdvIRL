@@ -2,7 +2,9 @@
 <meta charset="utf-8">
 
 <html>
-
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <style type="text/css">
   body {
     font-family: "Titillium Web", "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -252,26 +254,23 @@
     color: #1367a7;
   }
 </style>
+
 <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,600,400italic,600italic,300,300italic'
   rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 
 <head>
   <title>A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial
     Objects Within the Scope of Adversarial Architecture</title>
   <meta property="og:description"
     content="A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial Objects Within the Scope of Adversarial Architecture" />
+
   <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@mmalex">
   <meta name="twitter:title"
     content="A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial Objects Within the Scope of Adversarial Architecture">
-  <meta name="twitter:description"
-    content="A paper from NVIDIA Research which presents a method for instant training & rendering of high-quality neural graphics primitives.">
-  <meta name="twitter:image" content="https://nvlabs.github.io/instant-ngp/assets/twitter.jpg">
 </head>
 
 <body>
@@ -308,9 +307,13 @@
             <span class="material-icons"> videocam </span>
             Real-Time Live
           </a> -->
-          <a class="paper-btn" href="https://github.com/Tommy-Nguyen-cpu/AdvIRL/tree/MultiViewAdvIRL">
-            <span class="material-icons"> code </span>
-            Code
+          <a class="paper-btn" href="https://github.com/Tommy-Nguyen-cpu/AdvIRL/tree/MultiViewAdvIRL" style="display: flex; align-items: center;">
+            <span class="material-icons"> 
+              <div style="width: 40px;"> <!-- Adjust the width as needed -->
+                <img src="Images/GithubLogo.png" alt="GitHub Logo" style="max-width: 100%; height: auto;">
+              </div>
+            </span>
+            <span style="margin-left: 8px;">Code</span>
           </a>
         </div>
       </div>
@@ -352,6 +355,7 @@
 
     <section id="diagrams">
       <h2>Diagrams & Figures</h2>
+      <hr>
       <p>Our pipeline comprises three key algorithms: an image segmentation algorithm, the Neural Radiance Field (NeRF)
         algorithm, and a reinforcement learning algorithm. The image segmentation algorithm occurs before the
         reinforcement learning algorithm, executing once to generate background-free images, as illustrated in the
@@ -377,6 +381,7 @@
 
     <section id="results">
       <h2>Results</h2>
+      <hr>
       <figure class="col-4">
         <p class="caption_bold">
           Truck Scene
@@ -525,6 +530,7 @@
 
     <section id="NoiseGenerationExample" style="width: 100;">
       <h2>Agent Learning To Generate Noise For Christmas Tree Class</h2>
+      <hr>
       <figure style="width:100%;padding-bottom: 20px;display: flex;justify-content: center;">
         <img src="Images/Christmas_tree_transition.gif" style="width:100%;">
       </figure>
@@ -549,7 +555,7 @@
       </div>
     </section> -->
 
-<!-- TODO: Once a paper is published, I'll update this with appropriate links. For now, I'll comment it out. -->
+    <!-- TODO: Once a paper is published, I'll update this with appropriate links. For now, I'll comment it out. -->
     <!-- <section id="paper">
       <h2>Paper</h2>
       <hr>
@@ -593,23 +599,26 @@
       <hr>
       <div class="row">
         <p>
-          I am deeply thankful to my advisor, <a href="https://www.linkedin.com/in/mehmet-ergezer-98b1b312/">Dr. Mehmet Ergezer</a>, for his unwavering support and guidance throughout my graduate journey and thesis project. His exceptional mentorship has opened doors to invaluable opportunities, including participation in hackathons, conferences, and various publishing ventures, all of which have significantly enriched my academic journey.
+          I am deeply thankful to my advisor, <a href="https://www.linkedin.com/in/mehmet-ergezer-98b1b312/">Dr. Mehmet
+            Ergezer</a>, for his unwavering support and guidance throughout my graduate journey and thesis project. His
+          exceptional mentorship has opened doors to invaluable opportunities, including participation in hackathons,
+          conferences, and various publishing ventures, all of which have significantly enriched my academic journey.
           <br>
-          I extend my sincere appreciation to <a href="https://www.linkedin.com/in/antonio-furgiuele-51594225/">Dr. Antonio Furgiuele</a> for his assistance during my thesis project. His insightful guidance and encouragement, along with the opportunities he facilitated to attend various talks by professionals in the AI and architecture fields, have been instrumental in shaping my academic pursuits.
+          I extend my sincere appreciation to <a href="https://www.linkedin.com/in/antonio-furgiuele-51594225/">Dr.
+            Antonio Furgiuele</a> for his assistance during my thesis project. His insightful guidance and
+          encouragement, along with the opportunities he facilitated to attend various talks by professionals in the AI
+          and architecture fields, have been instrumental in shaping my academic pursuits.
           <br>
-          I am also indebted to <a href="https://www.linkedin.com/in/micahschuster/">Dr. Micah Schuster</a> for his invaluable mentorship and support during my graduate studies. His expertise and encouragement have helped me navigate through challenging academic endeavors, enabling me to complete my thesis successfully and on time. Furthermore, Dr. Micah Schuster has been a constant source of inspiration for various projects, and I am truly grateful for his guidance.
-          We would like to thank
-          <a href="https://anjulpatney.com/">Anjul Patney</a>,
-          <a href="https://luebke.us/">David Luebke</a>,
-          <a href="https://research.nvidia.com/person/jacob-munkberg">Jacob Munkberg</a>,
-          <a href="http://granskog.xyz/">Jonathan Granskog</a>,
-          <a href="https://www.cs.mcgill.ca/~jtremb59/">Jonathan Tremblay</a>.
-          I also thank <a href="https://joeylitalien.github.io/">Joey Litalien</a> for providing us with the framework
-          for this website.
+          I am also indebted to <a href="https://www.linkedin.com/in/micahschuster/">Dr. Micah Schuster</a> for his
+          invaluable mentorship and support during my graduate studies. His expertise and encouragement have helped me
+          navigate through challenging academic endeavors, enabling me to complete my thesis successfully and on time.
+          Furthermore, Dr. Micah Schuster has been a constant source of inspiration for various projects, and I am truly grateful for his guidance.
+          <br>
+          I would also like to thank <a href="https://joeylitalien.github.io/">Joey Litalien</a> for the framework for this website.
           <br />
           <br />
           <em>Truck & Lighthouse Scene &copy;Arno Knapitsch and Jaesik Park and Qian-Yi Zhou and Vladlen Koltun (<a
-            href="https://tanksandtemples.org/license/">CC BY 4.0</a>)
+              href="https://tanksandtemples.org/license/">CC BY 4.0</a>)
         </p>
       </div>
     </section>
