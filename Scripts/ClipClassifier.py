@@ -7,10 +7,10 @@ import os
 import numpy as np
 
 class CLIP_Classifier:
-    def __init__(self):
+    def __init__(self, device):
 
         # Load the model
-        self.device = "cuda:0"
+        self.device = device
         self.model, self.preprocess = clip.load('RN50', self.device)
 
     def predict(self, directory, num_imgs, classes, top):

@@ -8,7 +8,7 @@ import json
 import copy
 import numpy as np
 
-pretrained_model = ClipClassifier.CLIP_Classifier()
+pretrained_model = ClipClassifier.CLIP_Classifier("cuda:0")
 
 # Download the ImageNet labels file
 url = "https://raw.githubusercontent.com/anishathalye/imagenet-simple-labels/master/imagenet-simple-labels.json"
