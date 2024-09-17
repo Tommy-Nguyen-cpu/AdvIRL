@@ -21,10 +21,10 @@ The increasing deployment of AI models in critical applications has exposed them
 If you find our work useful in your research, please consider citing:
 
 ```bibtex
-@mastersthesis{tommy2024wit,
+@article{tommy2024wit,
           author  = "Tommy Nguyen",
-          title   = "A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial Objects Within the Scope of Adversarial Architecture",
-          school  = "Wentworth Institute of Technology",
+          title   = "AdvIRL: A Reinforcement Learning Approach for Performing Adversarial Attacks on NeRF Models",
+          journal= {},
           year    = "2024"
         }
 ```
