@@ -3,36 +3,46 @@ from gymnasium import spaces
 import numpy as np
 from PIL import Image
 import os
-import random
+import datetime
 
 class InstantNGPEnv(gym.Env):
-    def __init__(self, classifier_model, nerf_model, num_of_imgs, image_shape, true_class, target_class, path_to_og_images, image_output_path, 
-                 output_saved_file, transforms_path, labels, logPath = '../AdvOutput/rewards.log'):
+    def __init__(self, classifier_model, nerf_model, args, labels, logPath = '../AdvOutput/rewards.log'):
         super(InstantNGPEnv, self).__init__()
 
-        # Load Instant-NGP and MobileNetV2 models
         self.nerf_model = nerf_model
 
         self.data_loaded, self.feature_grid = self.nerf_model.loadNeRFData()
-        self.ground_truth_img = None
+        self.ground_truth_imgs = []
         self.log = open(logPath, 'a')
 
 
-        self.mobilenetv2 = classifier_model  # Load MobileNetV2 model
+        self.classifier = classifier_model
         self.labels = labels
-        self.true_class = true_class # True class
-        self.target = target_class # Target class
+        self.true_class = args.true_class # True class
+        self.negative_labels = args.negative_labels # Labels to avoid.
+        self.target = args.target_class # Target class
+
+        if self.target not in self.labels:
+            self.labels.append(self.target)
+
         self.total_reward = 0
         self.epochs = 0
         
-        self.Num_Imgs = num_of_imgs
-        self.ImageWidth = image_shape[0]
-        self.ImageHeight = image_shape[1]
+        self.Num_Imgs = args.num_imgs
+        self.ImageWidth = args.image_width
+        self.ImageHeight = args.image_height
+        self.adversarial_noise_resize = args.adversarial_noise_resize
+        self.save_adv_size = args.save_adv_size
 
-        self.path_to_og_images = path_to_og_images
-        self.images_output_path = image_output_path
-        self.output_file = output_saved_file
-        self.transforms_path = transforms_path
+        self.path_to_og_images = args.input_image_folder
+        self.images_output_path = args.output_image_folder
+        self.adversarial_noise_output_folder = args.adversarial_noise_output_folder
+        self.output_file = args.output_saved_nerf_file_path
+        self.transforms_path = args.output_transforms_path
+
+        self.theta_0 = args.theta_0
+        self.theta_1 = args.theta_1
+        self.theta_2 = args.theta_2
 
         # Define action and observation spaces
         self.action_space = spaces.Box(low=-0.05, high=0.05, shape=(self.feature_grid.shape), dtype=np.float32)  # Define space of allowable feature grid modifications
@@ -41,19 +51,16 @@ class InstantNGPEnv(gym.Env):
 
     def reset(self, seed=0):
         super().reset(seed=seed)
-        # Reset feature grid or load new one
-        self.ground_truth_img = np.empty((0, self.ImageHeight, self.ImageWidth, 3), dtype=np.uint8)
         
         list_dir = os.listdir(self.path_to_og_images)
-        for i in range(0, self.Num_Imgs):
-            image = Image.open(f"{self.path_to_og_images}{list_dir[i]}")
 
-            self.ground_truth_img = np.concatenate((self.ground_truth_img, np.asarray(image)[None, ...]), axis=0)
+        self.ground_truth_imgs = [Image.open(f"{self.path_to_og_images}{list_dir[i]}") for i in range(self.Num_Imgs)]
 
+        self.ground_truth_imgs = np.array(self.ground_truth_imgs)
 
         self.data_loaded, self.feature_grid = self.nerf_model.loadNeRFData()
 
-        return (self.ground_truth_img, {})
+        return (self.ground_truth_imgs, {})
     
     def calc_mse(self, og_imgs, rendered_imgs):
         squared_diff = (og_imgs - rendered_imgs) ** 2
@@ -62,53 +69,78 @@ class InstantNGPEnv(gym.Env):
         # Returns the maximum MSE. Penalize the agent for high mse score.
         return mse.max()
 
-    def get_reward(self, originalImage, renderedImage, predicted, all_classes, min_psnr=30, max_psnr=50, mse_weight = -.00005, psnr_weight = .5):
+    def get_reward(self, originalImage, renderedImage, predicted, all_classes):
 
-        returned_reward = 0
-        imageLoss = self.calc_mse(originalImage, renderedImage) * mse_weight
+        returned_reward = self.theta_2 * self.calc_mse(originalImage, renderedImage)
 
-        if predicted[1] == self.target:
-            # reward = target class confidence * 10 + number of images with target class prediction * .2 - number of images not target class * 1
-            returned_reward = predicted[2] * 150 - (self.Num_Imgs - predicted[0]) * .2
-        # Reward the agent for predicting anything that is not the true class.
-        elif predicted[1] != self.true_class:
-            # Rewards the agent for predicting the true class in less images and penalize agent slightly for remaining prediction in true class.
-            returned_reward =  (self.Num_Imgs - predicted[0]) * .1 # - predicted[0] * .1
-            
-            # Reward agent if even 1 of the images were classified as target class.
-            for key_class, value in all_classes.items():
-                if key_class == self.target:
-                    returned_reward += value[0] * .1
-                    break
+        top1_name = predicted[1] # Class for top 1.
+        top1_conf = predicted[2] # Confidence in top 1.
+        top1_nums = predicted[0] # Number of images classified as top 1.
+
+        if top1_name != self.true_class and top1_name not in self.negative_labels:
+
+            if top1_name == self.target: # If target is predicted as top 1
+                returned_reward += top1_conf * self.theta_0
+            elif self.target in all_classes: # If target is predicted at all
+                returned_reward += all_classes[self.target][0] # Rewards agent for confidence in true class.
+            else: # Else, reward agent for predicting anything.
+                returned_reward += top1_nums * .1
+        else:
+            returned_reward += self.theta_1 * top1_nums
         
-        # Penalize agent for significantly altering the image.
-        returned_reward += imageLoss
-
         print("Step Reward: " + str(returned_reward) + " for " + predicted[1] + " with confidence: " + str(predicted[2]) + " and num: " + str((predicted[0])))
         return returned_reward
+
+    def modify_imgs(self):
+        noisy_imgs = []
+
+        self.ground_truth_imgs = []
+        generated = []
+        for filename in os.listdir(self.images_output_path):
+            generated.append(filename)
+            self.ground_truth_imgs.append(Image.open(self.path_to_og_images + filename))
+        self.ground_truth_imgs = np.array(self.ground_truth_imgs)
+
+        for i in range(self.Num_Imgs):
+            output_adv = Image.open(self.images_output_path + generated[i])
+
+            noisy_imgs.append(output_adv)
+        
+        return noisy_imgs
 
     def pred_labels(self):
         pred_classes = {}
 
-        preds_per_imgs, imgs = self.mobilenetv2.predict(self.images_output_path, self.Num_Imgs, self.labels, top=1)
+        noise_imgs = self.modify_imgs()
+        preds_per_imgs, avg_target_conf = self.classifier.predict(noise_imgs, self.target, self.labels, top=1)
 
-        for i in range(len(preds_per_imgs)):
-            pred = preds_per_imgs[i][0]
+
+        for i in range(len(preds_per_imgs)): # The predictions produced by CLIP are in the same order as the noisey images we passed to it.
+            pred = preds_per_imgs[i][0] # Grabs the tuple.
+
+            # Add key-value pair to dictionary (key = label, value = [average confidence, number of images classified for this label]).
             if pred[1] not in pred_classes:
                 pred_classes[pred[1]] = [pred[2], 1]
             else:
                 pred_classes[pred[1]][0] *= pred_classes[pred[1]][1]
                 pred_classes[pred[1]][0] += pred[2]
-                pred_classes[pred[1]][1] += 1
-                pred_classes[pred[1]][0] /= pred_classes[pred[1]][1]
+                pred_classes[pred[1]][1] += 1 # Number of images counter.
+                pred_classes[pred[1]][0] /= pred_classes[pred[1]][1] # Average confidence
 
         maxKey = str(max(pred_classes, key=lambda x:pred_classes[x][1]))
 
-        print("dictionary: " + str(pred_classes))
-        print("pred: " + maxKey + ", confidence: " + str(pred_classes[maxKey][0]) + ", " + str(pred_classes[maxKey][1]) + " images.")
+        if maxKey != self.true_class and maxKey not in self.negative_labels and self.target in pred_classes and pred_classes[self.target][1] > 6:
+            saved_folder = datetime.datetime.now().strftime("%I%M%p%S on %B %d %Y")
+            os.makedirs(self.images_output_path + "../" + saved_folder)
+            for i in range(len(preds_per_imgs)):
+                pred = preds_per_imgs[i][0]
+                pred_label = pred[1]
+                if pred_label != self.true_class and pred_label not in self.negative_labels:
+                    noise_imgs[i].save(self.images_output_path +"../"+ saved_folder + f"/{pred[1]}_{pred[2]}_{i}_{noise_imgs[i].filename[noise_imgs[i].filename.rindex('/')+1:]}")
 
-        reward = self.get_reward(self.ground_truth_img, imgs, [pred_classes[maxKey][1], maxKey, pred_classes[maxKey][0]], pred_classes)  # Implement reward function
+        reward = self.get_reward(self.ground_truth_imgs, np.array(noise_imgs), [pred_classes[maxKey][1], maxKey, pred_classes[maxKey][0]], pred_classes)  # Implement reward function
 
+        print(f"Average confidence {avg_target_conf} in target class {self.target}")
 
         info = {
             "Target" : self.target,
@@ -117,7 +149,7 @@ class InstantNGPEnv(gym.Env):
             "Confidence" : pred_classes[maxKey][0],
             "Epochs" : self.epochs
         }
-        return imgs, maxKey, pred_classes, reward, info
+        return noise_imgs, maxKey, pred_classes, reward, info
 
     def step(self, action):
         # Modify feature grid based on action
