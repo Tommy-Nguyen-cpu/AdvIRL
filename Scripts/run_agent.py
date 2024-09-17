@@ -98,6 +98,6 @@ if __name__ == "__main__":
     parser.add_argument("--max_grad_norm", default=.00001, type=float, help="Reinforcement maximum gradient norm. NOTE: If value is set too high, it may result in gradient explosion.")
     parser.add_argument('--theta_0', default= 100, type=int, help='Weight for target confidence in reward equation.')
     parser.add_argument("--theta_1", default=-1, type=int, help="Weight for true confidence in reward equation.")
-    parser.add_argument("--theta_2", default=0.00005, type=float, help="Weight for MSE influence in reward equation.")
+    parser.add_argument("--theta_2", default=-0.00005, type=float, help="Weight for MSE influence in reward equation.")
 
     main(parser)
