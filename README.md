@@ -3,7 +3,9 @@
 
   <a href='https://google.com'><img src='https://img.shields.io/badge/ArXiv-PDF-red'></a> &nbsp; <a href='https://tommy-nguyen-cpu.github.io/AdvIRL/'><img src='https://img.shields.io/badge/Project-Page-Green'></a>
     <div>
-      <a target='_blank'>Tommy Nguyen <sup>*,1,2</sup> </a>&emsp;
+      <a target='_blank'>Tommy Nguyen <sup></sup> </a>&emsp;
+    <a href='https://github.com/memoatwit' target='_blank'>Mehmet Ergezer <sup></a>&emsp;
+    <a href='https://github.com/greenchris10' target='_blank'>Christian Green <sup></sup></a>&emsp;
   </div>
   <br>
   <div>
@@ -22,7 +24,7 @@ If you find our work useful in your research, please consider citing:
 
 ```bibtex
 @article{tommy2024wit,
-          author  = "Tommy Nguyen",
+          author  = "Tommy Nguyen, Mehmet Ergezer, Christian Green",
           title   = "AdvIRL: A Reinforcement Learning Approach for Performing Adversarial Attacks on NeRF Models",
           journal= {},
           year    = "2024"
@@ -30,7 +32,4 @@ If you find our work useful in your research, please consider citing:
 ```
 
 ## Acknowledgements
-I am deeply thankful to my advisor, Dr. Mehmet Ergezer, for his unwavering support and guidance throughout my graduate journey and thesis project. His exceptional mentorship has opened doors to invaluable opportunities, including participation in hackathons, conferences, and various publishing ventures, all of which have significantly enriched my academic journey.
-I extend my sincere appreciation to Dr. Antonio Furgiuele for his assistance during my thesis project. His insightful guidance and encouragement, along with the opportunities he facilitated to attend various talks by professionals in the AI and architecture fields, have been instrumental in shaping my academic pursuits.
-I am also indebted to Dr. Micah Schuster for his invaluable mentorship and support during my graduate studies. His expertise and encouragement have helped me navigate through challenging academic endeavors, enabling me to complete my thesis successfully and on time. Furthermore, Dr. Micah Schuster has been a constant source of inspiration for various projects, and I am truly grateful for his guidance.
-I would also like to thank Joey Litalien for the framework for this website.
+We would like to thank Joey Litalien for the framework for our AdvIRL website.
