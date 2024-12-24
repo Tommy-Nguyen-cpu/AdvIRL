@@ -1,7 +1,7 @@
 <div align="center">
     <h1>AdvIRL: A Reinforcement Learning Approach for Performing Adversarial Attacks on NeRF Models</h1>
 
-  <a href='https://google.com'><img src='https://img.shields.io/badge/ArXiv-PDF-red'></a> &nbsp; <a href='https://tommy-nguyen-cpu.github.io/AdvIRL/'><img src='https://img.shields.io/badge/Project-Page-Green'></a>
+  <a href='https://www.arxiv.org/abs/2412.16213'><img src='https://img.shields.io/badge/ArXiv-PDF-red'></a> &nbsp; <a href='https://tommy-nguyen-cpu.github.io/AdvIRL/'><img src='https://img.shields.io/badge/Project-Page-Green'></a>
     <div>
       <a target='_blank'>Tommy Nguyen <sup></sup> </a>&emsp;
     <a href='https://github.com/memoatwit' target='_blank'>Mehmet Ergezer <sup></a>&emsp;
