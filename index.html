@@ -260,29 +260,29 @@
 
 
 <head>
-  <title>A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial
-    Objects Within the Scope of Adversarial Architecture</title>
+  <title>AdvIRL: Reinforcement Learning-Based Adversarial Attacks on 3D NeRF Models</title>
   <meta property="og:description"
-    content="A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial Objects Within the Scope of Adversarial Architecture" />
+    content="AdvIRL: Reinforcement Learning-Based Adversarial Attacks on 3D NeRF Models" />
 
   <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:creator" content="@mmalex">
   <meta name="twitter:title"
-    content="A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of Adversarial Objects Within the Scope of Adversarial Architecture">
+    content="AdvIRL: Reinforcement Learning-Based Adversarial Attacks on 3D NeRF Models">
 </head>
 
 <body>
   <div class="container">
     <div class="paper-title">
-      <h1>A Novel Reinforcement Learning Approach for Utilizing Neural Radiance Fields In the Construction of
-        Adversarial Objects Within the Scope of Adversarial Architecture</h1>
+      <h1>AdvIRL: Reinforcement Learning-Based Adversarial Attacks on 3D NeRF Models</h1>
     </div>
 
     <div id="authors">
       <div class="author-row">
         <div class="col-1 text-center"><a href="https://www.linkedin.com/in/tommy-nguyen-/">Tommy Nguyen</a></div>
+        <div class="col-1 text-center"><a href="https://www.linkedin.com/in/mehmet-ergezer-98b1b312/">Mehmet Ergezer</a></div>
+        <div class="col-1 text-center"><a href="https://www.linkedin.com/in/christian-green-a10443170/">Christian Green</a></div>
       </div>
 
       <div class="affil-row">
@@ -291,10 +291,10 @@
 
       <div style="clear: both">
         <div class="paper-btn-parent">
-          <!-- <a class="paper-btn" href="assets/mueller2022instant.pdf">
+          <a class="paper-btn" href="https://www.arxiv.org/abs/2412.16213">
             <span class="material-icons"> description </span>
             Paper
-          </a> -->
+          </a>
           <!-- <a class="paper-btn" href="assets/mueller2022instant.mp4">
             <span class="material-icons"> videocam </span>
             Video
@@ -307,7 +307,7 @@
             <span class="material-icons"> videocam </span>
             Real-Time Live
           </a> -->
-          <a class="paper-btn" href="https://github.com/Tommy-Nguyen-cpu/AdvIRL/tree/MultiViewAdvIRL" style="display: flex; align-items: center;">
+          <a class="paper-btn" href="https://github.com/Tommy-Nguyen-cpu/AdvIRL/tree/MultiView-Clean?tab=readme-ov-file" style="display: flex; align-items: center;">
             <span class="material-icons"> 
               <div style="width: 40px;"> <!-- Adjust the width as needed -->
                 <img src="Images/GithubLogo.png" alt="GitHub Logo" style="max-width: 100%; height: auto;">
@@ -323,33 +323,7 @@
     <h2>Abstract</h2>
     <hr>
     <p>
-      The proliferation of AI models across various domains has brought attention to the vulnerabilities posed by
-      adversarial attacks. In response, the emerging field of adversarial architecture explores how adversarial noise
-      influences architectural design and perception. In this thesis, we present a novel reinforcement learning
-      framework
-      leveraging an image segmentation algorithm and a Neural Radiance Fields (NeRF) model to generate adversarial noise
-      resilient to diverse transformations. Our investigation reveals that a grid-based NeRF model surpasses NeRF-- in
-      both performance and rendering quality. While NeRF-- requires 2 hours to render a forward-facing scene with
-      significant artifacts, the grid-based NeRF model accomplishes the task in just 20 seconds with minimal artifacts.
-      Consequently, we integrate the grid-based NeRF model into our reinforcement learning pipeline. Additionally, we
-      compare two approaches for adversarial noise generation: modifying NeRF input images and altering NeRF parameters.
-      We observe that modifying NeRF parameters yields superior results due to its lower dimensionality and greater
-      parameter exploration capabilities. Furthermore, NeRFs are recognized for their tendency to smooth out details in
-      scenes. Consequently, imperceptible noise introduced in the input images is highly likely to be smoothed out
-      during
-      the rendering process. Moreover, our analysis revealed that integrating an image segmentation algorithm such as
-      Detectron2, coupled with a well-designed reward system encompassing both rewards and penalties, empowers the agent
-      to selectively modify the texture of the object within the scene. Overall, our study demonstrates the
-      effectiveness
-      of our pipeline in untargeted and targeted scenarios. For instance, our agent successfully generates adversarial
-      noise for a banana, with 130 out of 175 transformations correctly classified as the target class "slug".
-      Similarly,
-      in the lighthouse scene, 13 out of 20 images are misclassified as a "boathouse". Although the truck scene fails to
-      target a specific class, it effectively reduces the classifier's confidence in identifying the truck as a "pickup
-      truck" across various angles. While demonstrating commendable performance, there remains ample room for
-      enhancement,
-      particularly in optimizing memory usage and leveraging specialized image segmentation algorithms tailored for
-      architectural objects. These avenues present promising directions for future research endeavors.
+      The increasing deployment of AI models in critical applications has exposed them to significant risks from adversarial attacks. While adversarial vulnerabilities in 2D vision models have been extensively studied, the threat landscape for 3D generative models, such as Neural Radiance Fields (NeRF), remains underexplored. This work introduces AdvIRL, a novel framework for crafting adversarial NeRF models using Instant Neural Graphics Primitives (Instant-NGP) and Reinforcement Learning. Unlike prior methods, AdvIRL generates adversarial noise that remains robust under diverse 3D transformations, including rotations and scaling, enabling effective black-box attacks in real-world scenarios. Our approach is validated across a wide range of scenes, from small objects (e.g., bananas) to large environments (e.g., lighthouses). Notably, targeted attacks achieved high-confidence misclassifications, such as labeling a banana as a slug and a truck as a cannon, demonstrating the practical risks posed by adversarial NeRFs. Beyond attacking, AdvIRL-generated adversarial models can serve as adversarial training data to enhance the robustness of vision systems. The implementation of AdvIRL is publicly available at https://github.com/Tommy-Nguyen-cpu/AdvIRL/tree/MultiView-Clean?tab=readme-ov-file, ensuring reproducibility and facilitating future research.
     </p>
     </section>
 
