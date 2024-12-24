@@ -23,13 +23,16 @@ The increasing deployment of AI models in critical applications has exposed them
 If you find our work useful in your research, please consider citing:
 
 ```bibtex
-@article{tommy2024wit,
-          author  = "Tommy Nguyen, Mehmet Ergezer, Christian Green",
-          title   = "AdvIRL: A Reinforcement Learning Approach for Performing Adversarial Attacks on NeRF Models",
-          journal= {},
-          year    = "2024"
-        }
+@misc{nguyen2024advirlreinforcementlearningbasedadversarial,
+      title={AdvIRL: Reinforcement Learning-Based Adversarial Attacks on 3D NeRF Models}, 
+      author={Tommy Nguyen and Mehmet Ergezer and Christian Green},
+      year={2024},
+      eprint={2412.16213},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2412.16213}, 
+}
 ```
 
 ## Acknowledgements
-We would like to thank Joey Litalien for the framework for our AdvIRL website.
+We would like to thank Joey Litalien for the framework for our AdvIRL website. We would also like to thank Dr. Micah Schuster and Dr. Antonio Furgiuele for reviewing our paper and providing feedback on our work.
