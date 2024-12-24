@@ -35,4 +35,4 @@ If you find our work useful in your research, please consider citing:
 ```
 
 ## Acknowledgements
-We would like to thank Joey Litalien for the framework for our AdvIRL website. We would also like to thank Dr. Micah Schuster and Dr. Antonio Furgiuele for reviewing our paper and providing feedback on our work.
+We would like to thank Dr. Micah Schuster and Dr. Antonio Furgiuele for reviewing our paper and providing feedback on our work. We also thank Joey Litalien for the framework for our AdvIRL website. 
