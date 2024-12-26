@@ -6,7 +6,7 @@ import os
 import datetime
 
 class InstantNGPEnv(gym.Env):
-    def __init__(self, classifier_model, nerf_model, args, labels, logPath = '../AdvOutput/rewards.log'):
+    def __init__(self, classifier_model, nerf_model, args, labels):
         super(InstantNGPEnv, self).__init__()
 
         self.nerf_model = nerf_model
