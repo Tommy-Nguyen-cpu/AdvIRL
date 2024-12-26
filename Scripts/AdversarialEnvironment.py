@@ -13,8 +13,6 @@ class InstantNGPEnv(gym.Env):
 
         self.data_loaded, self.feature_grid = self.nerf_model.loadNeRFData()
         self.ground_truth_imgs = []
-        self.log = open(logPath, 'a')
-
 
         self.classifier = classifier_model
         self.labels = labels
@@ -184,6 +182,3 @@ class InstantNGPEnv(gym.Env):
         print("Total Reward: " + str(self.total_reward))
 
         return images, reward, done, truncated, info
-
-    def close(self):
-        self.log.close()
