@@ -1,6 +1,7 @@
 from stable_baselines3 import PPO
 from AdversarialEnvironment import InstantNGPEnv
 from NeRF import NeRF_Model
+from helper import generate_transforms, baseline_classification
 
 import ClipClassifier
 import requests
@@ -12,7 +13,6 @@ from PIL import Image
 import os
 import pandas as pd
 
-
 def main(args):
     pretrained_model = ClipClassifier.CLIP_Classifier(args.clip_device)
 
@@ -21,25 +21,7 @@ def main(args):
     response = requests.get(url)
     labels = response.json()
 
-    # Grab baseline classification for images of scene without noise.   
-    df = pd.DataFrame(columns=["Image Name", "Class", "Confidence"])
-    for name in os.listdir(args.input_image_folder):
-        image = Image.open(args.input_image_folder + name)
-        pred = pretrained_model.predict_single(image, args.target_class, labels, top = 1)[0][0]
-        df.loc[-1] = [name, pred[1], pred[2]]
-        df.index = df.index + 1
-        df = df.sort_index()
-    df.to_csv(args.input_image_folder + f"../original_predictions_{args.true_class}.csv")
-    
-    # Modify NeRF msgpack so we only generate some of the images, not all images of the scene.
-    def generate_transforms(og_transforms_path, output_transforms_path, number_of_transforms= 10):
-        file = open(og_transforms_path)
-        transforms = json.load(file)
-        copyJson = copy.deepcopy(transforms)
-        with open(output_transforms_path, "w") as short_output:
-            copyJson['frames'] = list(np.array(copyJson['frames'])[:number_of_transforms])
-            json.dump(copyJson, short_output)
-
+    baseline_classification(pretrained_model, args.input_image_folder, labels, args.target_class, args.true_class)
     generate_transforms(args.transforms_path, args.output_transforms_path, number_of_transforms=args.num_imgs)
 
     nerf_model = NeRF_Model(args.input_saved_nerf_file_path, args.output_saved_nerf_file_path, args.input_image_folder, args.output_transforms_path, args.output_image_folder)
