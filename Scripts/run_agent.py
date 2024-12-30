@@ -31,6 +31,7 @@ def main(args):
 
     # Create RL agent
     model = PPO('MlpPolicy', env, device='cpu', n_steps=args.n_steps, batch_size=args.batch_size, max_grad_norm = args.max_grad_norm)
+    
     # Train the agent
     # Evaluate the trained agent
     episode_reward = 0

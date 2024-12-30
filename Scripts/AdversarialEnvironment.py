@@ -1,9 +1,10 @@
+from helper import save_images
+
 import gymnasium as gym
 from gymnasium import spaces
 import numpy as np
 from PIL import Image
 import os
-import datetime
 
 class InstantNGPEnv(gym.Env):
     def __init__(self, classifier_model, nerf_model, args, labels):
@@ -22,6 +23,8 @@ class InstantNGPEnv(gym.Env):
 
         if self.target not in self.labels:
             self.labels.append(self.target)
+        if self.true_class not in self.negative_labels:
+            self.negative_labels.append(self.true_class)
 
         self.total_reward = 0
         self.epochs = 0
@@ -44,7 +47,7 @@ class InstantNGPEnv(gym.Env):
 
         # Define action and observation spaces
         self.action_space = spaces.Box(low=-0.05, high=0.05, shape=(self.feature_grid.shape), dtype=np.float32)  # Define space of allowable feature grid modifications
-        self.observation_space = spaces.Box(low=0, high=255, shape=(self.Num_Imgs, self.ImageHeight, self.ImageWidth, 3), dtype=np.uint8) # Define state representation (e.g., feature grid, image)
+        self.observation_space = spaces.Box(low=0, high=255, shape=(self.Num_Imgs, self.ImageHeight, self.ImageWidth, 3), dtype=np.uint8) # Define state representation (e.g., observed images)
 
 
     def reset(self, seed=0):
@@ -53,7 +56,6 @@ class InstantNGPEnv(gym.Env):
         list_dir = os.listdir(self.path_to_og_images)
 
         self.ground_truth_imgs = [Image.open(f"{self.path_to_og_images}{list_dir[i]}") for i in range(self.Num_Imgs)]
-
         self.ground_truth_imgs = np.array(self.ground_truth_imgs)
 
         self.data_loaded, self.feature_grid = self.nerf_model.loadNeRFData()
@@ -75,7 +77,7 @@ class InstantNGPEnv(gym.Env):
         top1_conf = predicted[2] # Confidence in top 1.
         top1_nums = predicted[0] # Number of images classified as top 1.
 
-        if top1_name != self.true_class and top1_name not in self.negative_labels:
+        if top1_name not in self.negative_labels:
 
             if top1_name == self.target: # If target is predicted as top 1
                 returned_reward += top1_conf * self.theta_0
@@ -127,15 +129,7 @@ class InstantNGPEnv(gym.Env):
 
         maxKey = str(max(pred_classes, key=lambda x:pred_classes[x][1]))
 
-        if maxKey != self.true_class and maxKey not in self.negative_labels and self.target in pred_classes and pred_classes[self.target][1] > 6:
-            saved_folder = datetime.datetime.now().strftime("%I%M%p%S on %B %d %Y")
-            os.makedirs(self.images_output_path + "../" + saved_folder)
-            for i in range(len(preds_per_imgs)):
-                pred = preds_per_imgs[i][0]
-                pred_label = pred[1]
-                if pred_label != self.true_class and pred_label not in self.negative_labels:
-                    noise_imgs[i].save(self.images_output_path +"../"+ saved_folder + f"/{pred[1]}_{pred[2]}_{i}_{noise_imgs[i].filename[noise_imgs[i].filename.rindex('/')+1:]}")
-
+        save_images(noise_imgs, self.images_output_path, maxKey, self.target, preds_per_imgs, pred_classes, self.negative_labels)
         reward = self.get_reward(self.ground_truth_imgs, np.array(noise_imgs), [pred_classes[maxKey][1], maxKey, pred_classes[maxKey][0]], pred_classes)  # Implement reward function
 
         print(f"Average confidence {avg_target_conf} in target class {self.target}")
@@ -170,10 +164,7 @@ class InstantNGPEnv(gym.Env):
         if (maxKey == self.target and pred_classes[maxKey][0] > .5) or (self.total_reward < -5):
             done = True
             self.total_reward = 0
-
-            print("RESETTING ENVIRONMENT!!!")
-
-            # TODO: Remove after you test to see how reseting the environment after the done flag is set impacts performance.
+            
             self.reset()
 
         self.epochs += 1
