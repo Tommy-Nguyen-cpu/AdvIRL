@@ -3,7 +3,6 @@ from torch import no_grad
 from torch import stack
 from torch import cat
 from PIL import Image
-import os
 import numpy as np
 
 class CLIP_Classifier:
@@ -19,7 +18,6 @@ class CLIP_Classifier:
            image_input.append(self.preprocess(image))
         # Prepare the inputs
         image_input = stack(image_input).to(self.device)
-        # image_input = self.preprocess(images).unsqueeze(0).to(self.device)
         text_inputs = cat([clip.tokenize(f"a photo of a {c}") for c in classes]).to(self.device)
 
         if top > len(classes):

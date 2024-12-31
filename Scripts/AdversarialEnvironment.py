@@ -17,14 +17,13 @@ class InstantNGPEnv(gym.Env):
 
         self.classifier = classifier_model
         self.labels = labels
-        self.true_class = args.true_class # True class
         self.negative_labels = args.negative_labels # Labels to avoid.
         self.target = args.target_class # Target class
 
         if self.target not in self.labels:
             self.labels.append(self.target)
-        if self.true_class not in self.negative_labels:
-            self.negative_labels.append(self.true_class)
+        if args.true_class not in self.negative_labels:
+            self.negative_labels.append(args.true_class)
 
         self.total_reward = 0
         self.epochs = 0
@@ -32,12 +31,9 @@ class InstantNGPEnv(gym.Env):
         self.Num_Imgs = args.num_imgs
         self.ImageWidth = args.image_width
         self.ImageHeight = args.image_height
-        self.adversarial_noise_resize = args.adversarial_noise_resize
-        self.save_adv_size = args.save_adv_size
 
         self.path_to_og_images = args.input_image_folder
         self.images_output_path = args.output_image_folder
-        self.adversarial_noise_output_folder = args.adversarial_noise_output_folder
         self.output_file = args.output_saved_nerf_file_path
         self.transforms_path = args.output_transforms_path
 
@@ -114,7 +110,6 @@ class InstantNGPEnv(gym.Env):
         noise_imgs = self.modify_imgs()
         preds_per_imgs, avg_target_conf = self.classifier.predict(noise_imgs, self.target, self.labels, top=1)
 
-
         for i in range(len(preds_per_imgs)): # The predictions produced by CLIP are in the same order as the noisey images we passed to it.
             pred = preds_per_imgs[i][0] # Grabs the tuple.
 
@@ -151,14 +146,10 @@ class InstantNGPEnv(gym.Env):
         self.nerf_model.SaveParameters(self.data_loaded, self.feature_grid)
         self.nerf_model.render_outputs(self.output_file, self.transforms_path, self.images_output_path, width=self.ImageHeight, height=self.ImageWidth)
 
-        truncated, info = False, {}
-
+        truncated, done, info = False, False, {}
         images, maxKey, pred_classes, reward, info = self.pred_labels()
 
         self.total_reward += reward
-
-        # Determine if episode is done
-        done = False
 
         # Setting the "done" flag is for the ".learn". Tells the program when it should stop.
         if (maxKey == self.target and pred_classes[maxKey][0] > .5) or (self.total_reward < -5):

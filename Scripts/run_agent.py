@@ -5,13 +5,7 @@ from helper import generate_transforms, baseline_classification
 
 import ClipClassifier
 import requests
-import json
-import copy
-import numpy as np
 import argparse
-from PIL import Image
-import os
-import pandas as pd
 
 def main(args):
     pretrained_model = ClipClassifier.CLIP_Classifier(args.clip_device)
