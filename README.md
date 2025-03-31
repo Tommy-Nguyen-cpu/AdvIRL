@@ -24,7 +24,7 @@ If you find our work useful in your research, please consider citing:
 
 ```bibtex
 @misc{nguyen2024advirlreinforcementlearningbasedadversarial,
-      title={AdvIRL: Reinforcement Learning-Based Adversarial Attacks on 3D NeRF Models}, 
+      title={AdvIRL: A Reinforcement Learning Approach for Performing Adversarial Attacks on NeRF Models}, 
       author={Tommy Nguyen and Mehmet Ergezer and Christian Green},
       year={2024},
       eprint={2412.16213},
